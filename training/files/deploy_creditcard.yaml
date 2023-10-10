@@ -1,0 +1,64 @@
+apiVersion: machinelearning.seldon.io/v1alpha2
+kind: SeldonDeployment
+metadata:
+  labels:
+    app: seldon
+    sidecar.istio.io/inject: "true"
+  name: creditcard-seldon
+  namespace: mlops-seldon
+spec:
+  annotations:
+    seldon.io/grpc-max-message-size: '1000000000'
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/prometheus"
+  name: creditcard-seldon
+  predictors:
+  - componentSpecs:
+    - spec:
+        containers:
+        - image: ghcr.io/khaosresearch/deploy-creditcard:latest
+          imagePullPolicy: Always
+          name: predictor
+          env:
+          - name: SELDON_LOG_LEVEL
+            value: INFO
+          - name: GUNICORN_WORKERS
+            value: '1'
+          - name: GRPC_WORKERS
+            value: '1'
+          - name: MLFLOW_S3_IGNORE_TLS
+            value: "true"
+          - name: MLFLOW_S3_ENDPOINT_URL
+            value: "http://192.168.219.2:9000"
+          - name: MLFLOW_TRACKING_URI
+            value: "http://192.168.219.71:32001"
+          - name: AWS_ACCESS_KEY_ID
+            value: mlops-am
+          - name: AWS_SECRET_ACCESS_KEY
+            value: A8PnM4Bk9r9y5A69bRb
+          resources:
+            requests:
+              memory: "4Gi"
+              cpu: "2"
+            limits:
+              memory: "4Gi"
+              cpu: "2"
+    graph:
+      children: []
+      parameters:
+      - name: model_name
+        type: STRING
+        value: creditcard
+      - name: file_path
+        type: STRING
+        value: files
+      - name: model_version
+        type: STRING
+        value: production
+      name: predictor
+      type: MODEL
+      endpoint:
+        type: REST
+    name: main
+    replicas: 1
+    traffic : 100
