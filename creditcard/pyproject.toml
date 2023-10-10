@@ -3,38 +3,26 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "evolver"
+name = "creditcard"
 version = "1.0.0"
 authors = [
-  { name="José F. Aldana Martín", email="jfaldanam@uma.es" },
-  { name="Antonio J. Nebro", email="ajnebro@uma.es" },
+  { name="Antonio M. Burgueño", email="ambrbr@uma.es" },
 ]
-description = "Visualization and execution dashboard for the Evolver project"
+description = "Fraud detection models, including drift detection"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = "==3.11"
 classifiers = [
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Development Status :: 1 - Planning",
     "License :: OSI Approved :: MIT License",
     "Topic :: Scientific/Engineering",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 dependencies = [
-    "streamlit",
+    "alibi-detect" = "==0.11.4",
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/jMetal/Evolver"
-"Bug Tracker" = "https://github.com/jMetal/Evolver/issues"
-
-[project.optional-dependencies]
-dev = [
-  "isort",
-  "black",
-  "coverage",
-  "ruff",
-]
-complete = [
-  "evolver[dev]",
-]
+"Homepage" = "https://github.com/KhaosResearch/mlops-creditcard"
+"Bug Tracker" = "https://github.com/KhaosResearch/mlops-creditcard/issues"
