@@ -29,13 +29,13 @@ spec:
           - name: MLFLOW_S3_IGNORE_TLS
             value: "true"
           - name: MLFLOW_S3_ENDPOINT_URL
-            value: "http://192.168.219.2:9000"
+            value: ""
           - name: MLFLOW_TRACKING_URI
-            value: "http://192.168.219.71:32001"
+            value: ""
           - name: AWS_ACCESS_KEY_ID
-            value: mlops-am
+            value: ""
           - name: AWS_SECRET_ACCESS_KEY
-            value: A8PnM4Bk9r9y5A69bRb
+            value: ""
           resources:
             requests:
               memory: "4Gi"
