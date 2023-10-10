@@ -1,3 +1,4 @@
 s3fs==2023.4.0
 boto3==1.26.90
 mlflow==2.3.1
+creditcard @ git+https://git@github.com/KhaosResearch/mlops-creditcard.git#subdirectory=creditcard

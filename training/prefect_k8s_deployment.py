@@ -25,11 +25,11 @@ customizations = [
         "value": {
             "requests": {
                 "cpu": "2",
-                "memory": "50Gi"
+                "memory": "16Gi"
             },
             "limits": {
                 "cpu": "2",
-                "memory": "50Gi"
+                "memory": "16Gi"
             }
         },
     },{

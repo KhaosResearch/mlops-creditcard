@@ -1,7 +1,7 @@
 import os
 
 import mlflow
-from models.creditcard_model import CreditcardModel
+from creditcard.creditcard_model import CreditcardModel
 
 class CreditcardSeldonWrapper:
 
