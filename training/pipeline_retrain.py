@@ -12,15 +12,13 @@ import pandas as pd
 import mlflow
 import boto3
 from kubernetes import client, config
-from mlflow.models.signature import ModelSignature
-from mlflow.types.schema import Schema, ColSpec
 from sklearn.ensemble import RandomForestClassifier
 from prefect import flow, task
 from prefect.blocks.kubernetes import KubernetesClusterConfig
 from creditcard_mlflow_wrapper import CreditcardMlflowWrapper
 
 @flow
-def retraining_flow(data_bucket: str, data_folder: str, model_name: str, test_size: float):
+def retraining_flow_creditcard(data_bucket: str="mlops-am", data_folder: str="data/creditcard", model_name: str="creditcard", test_size: float=0.1):
     new_data = ingest_new_data(data_bucket, data_folder)
     retrain_model(new_data, model_name, test_size)
     deploy_best_model(model_name, wait_for=[retrain_model])
@@ -190,6 +188,3 @@ def ingest_new_data(bucket: str, folder: str):
 
     merged_df = pd.concat(dfs, ignore_index=True)
     return merged_df
-
-if __name__ == "__main__":
-    retraining_flow("mlops-am", "data/creditcard", "creditcard", 0.1)

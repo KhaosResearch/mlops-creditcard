@@ -1,4 +1,3 @@
-from landcoverpy.config import settings
 from prefect.blocks.kubernetes import KubernetesClusterConfig
 from prefect.filesystems import S3
 from prefect.infrastructure.kubernetes import KubernetesJob
@@ -15,8 +14,6 @@ environment = {
         'MLFLOW_S3_ENDPOINT_URL': "http://192.168.219.2:9000",
         'MLFLOW_S3_IGNORE_TLS': "true"
     }
-
-environment = dict(settings) | environment
 
 customizations = [
     {

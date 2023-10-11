@@ -1,8 +1,6 @@
 import mlflow
 import json
 import os
-import numpy as np
-import pandas as pd
 from prefect.filesystems import S3
 
 from creditcard_mlflow_wrapper import CreditcardMlflowWrapper

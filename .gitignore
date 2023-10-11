@@ -4,3 +4,4 @@ __pycache__/
 *.copy
 .prefectignore
 drift_detector.py
+deployment.yaml

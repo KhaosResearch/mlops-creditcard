@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: prefect-agent
+  name: prefect-agent-creditcard
   namespace: mlops-prefect
   labels:
     app: prefect-agent
@@ -17,8 +17,8 @@ spec:
     spec:
       containers:
         - name: agent
-          image: ghcr.io/khaosresearch/prefect-landcover:latest
-          command: ["prefect", "agent", "start", "-q", "default"]
+          image: ghcr.io/khaosresearch/prefect-creditcard:latest
+          command: ["prefect", "agent", "start", "-q", "creditcard"]
           imagePullPolicy: "Always"
           resources:
             limits:
