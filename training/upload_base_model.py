@@ -27,7 +27,7 @@ with mlflow.start_run(experiment_id=experiment_id):
     mlflow.pyfunc.log_model(artifact_path="model",
                             registered_model_name="creditcard",
                             code_path=["creditcard_mlflow_wrapper.py"],
-                            pip_requirements=["mlflow==2.3.1", "joblib==1.1.0"],
+                            pip_requirements=["mlflow==2.3.1", "joblib==1.1.1", "creditcard>=1.0.0"],
                             python_model=CreditcardMlflowWrapper(),
                             artifacts={
                                 "model_file": model_file,

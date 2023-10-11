@@ -1,5 +1,3 @@
-import json
-
 import mlflow
 from creditcard.models.creditcard_model import CreditcardModel
 
