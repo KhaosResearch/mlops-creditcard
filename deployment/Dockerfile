@@ -10,6 +10,8 @@ COPY ./requirements.txt /home
 RUN chown -R 8888 /home
 RUN chmod -R 755 /home
 
+RUN pip install --upgrade pip
+
 RUN pip install -r requirements.txt
 # Port for GRPC
 EXPOSE 5000
