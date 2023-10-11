@@ -1,7 +1,7 @@
 import json
 
 import mlflow
-from models.creditcard_model import CreditcardModel
+from creditcard.models.creditcard_model import CreditcardModel
 
 class CreditcardMlflowWrapper(mlflow.pyfunc.PythonModel):
     def load_context(self, context):
