@@ -16,7 +16,7 @@ train_df = df.drop(index=test_indices)
 test_df = df.loc[test_indices]
 
 clf = RandomForestClassifier(n_jobs=2)
-clf.fit(train_df.drop("Class", axis=1), train_df["Class"])
+clf.fit(train_df.drop("Class", axis=1).values, train_df["Class"].values)
 
 joblib.dump(clf, 'base_model/model.joblib')
 
