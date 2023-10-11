@@ -10,8 +10,10 @@ COPY ./requirements.txt /home
 RUN chown -R 8888 /home
 RUN chmod -R 755 /home
 
-RUN apt-get -y  update
 RUN pip install --upgrade pip
+
+# https://github.com/yaml/pyyaml/issues/724#issuecomment-1638636728
+RUN pip install "cython<3.0.0" && pip install --no-build-isolation pyyaml==5.4.1
 
 RUN pip install -r requirements.txt
 # Port for GRPC
