@@ -10,6 +10,7 @@ COPY ./requirements.txt /home
 RUN chown -R 8888 /home
 RUN chmod -R 755 /home
 
+RUN apt-get -y  update
 RUN pip install --upgrade pip
 
 RUN pip install -r requirements.txt
