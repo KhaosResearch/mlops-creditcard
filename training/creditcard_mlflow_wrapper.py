@@ -7,6 +7,5 @@ class CreditcardMlflowWrapper(mlflow.pyfunc.PythonModel):
         self.creditcard_model = CreditcardModel(model_file)
 
     def predict(self, context, model_input_dict):
-        print(f"predicting: {model_input_dict}")
         prediction = self.creditcard_model.predict(**model_input_dict)
         return prediction

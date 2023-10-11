@@ -24,7 +24,6 @@ class CreditcardSeldonWrapper:
         if not self.ready:
             self.load_model()
         
-        print(f"predicting: {X}")
         prediction = self.predictor.predict(X)
         predicted_label = self.predictor.prediction_to_label(int(prediction))
         return {'result' : predicted_label}

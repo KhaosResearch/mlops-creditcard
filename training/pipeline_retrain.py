@@ -135,7 +135,7 @@ def retrain_model(new_data: pd.DataFrame, model_name: str, test_size: float, n_j
     model_metadata = {
         "model": str(type(clf)),
         "n_jobs": str(clf.n_jobs),
-        "used_columns": [str(column) for column in X_train.drop("Class", axis=1).columns],
+        "used_columns": [str(column) for column in X_train.columns],
         "classes": [str(class_) for class_ in clf.classes_],
         "test_size": str(test_size)
     }
@@ -150,15 +150,10 @@ def retrain_model(new_data: pd.DataFrame, model_name: str, test_size: float, n_j
 
     with mlflow.start_run(experiment_id=experiment_id):
 
-        input_schema = Schema([ColSpec("string","input geometry")])
-        output_schema = Schema([ColSpec("integer")])
-        signature = ModelSignature(inputs=input_schema, outputs=output_schema)
-        input_example = {'input geometry': '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"coordinates":[[[9.80232,44.10784],[9.79774,44.09437],[9.84088,44.08853],[9.87776,44.10170],[9.84400,44.12190],[9.80232,44.10784]]],"type":"Polygon"}}]}'}
-
         mlflow.pyfunc.log_model(artifact_path="model",
                                 registered_model_name="creditcard",
                                 code_path=["creditcard_mlflow_wrapper.py"],
-                                pip_requirements=["mlflow==2.3.1", "joblib==1.1.0"],
+                                pip_requirements=["mlflow==2.3.1", "joblib==1.1.1", "creditcard>=1.0.0"],
                                 python_model=CreditcardMlflowWrapper(),
                                 artifacts={
                                     "model_file": model_path, 
@@ -166,8 +161,6 @@ def retrain_model(new_data: pd.DataFrame, model_name: str, test_size: float, n_j
                                     "testing_data": testing_data_path, 
                                     "metadata_file": model_metadata_path,
                                 },
-                                signature=signature,
-                                input_example=input_example
         )
         
         mlflow.log_params(model_metadata)
@@ -177,7 +170,7 @@ def retrain_model(new_data: pd.DataFrame, model_name: str, test_size: float, n_j
 @task
 def ingest_new_data(bucket: str, folder: str):
 
-    endpoint_url = os.environ.get('FSSPEC_S3_ENDPOINT_URL')
+    endpoint_url = os.environ.get('MLFLOW_S3_ENDPOINT_URL')
     aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
     aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
@@ -192,9 +185,11 @@ def ingest_new_data(bucket: str, folder: str):
         response = s3.get_object(Bucket=bucket, Key=csv_file)
         csv_content = response['Body'].read()
         csv_buffer = BytesIO(csv_content)
-        df = pd.read_csv(csv_buffer)
+        df = pd.read_csv(csv_buffer, index_col='id')
         dfs.append(df)
 
     merged_df = pd.concat(dfs, ignore_index=True)
-
     return merged_df
+
+if __name__ == "__main__":
+    retraining_flow("mlops-am", "data/creditcard", "creditcard", 0.1)
