@@ -50,9 +50,12 @@ def deploy_best_model(model_name):
         custom_api = client.CustomObjectsApi()
         with open("files/deploy_creditcard.yaml", 'r') as stream:
             deployment_yaml = yaml.safe_load(stream)
-        for k,v in os.environ.items():
-            deployment_yaml["spec"]["predictors"][0]["componentSpecs"][0]["spec"]["containers"][0]["env"].append({k:v})
-            print(deployment_yaml)
+
+        # If value is empty in deployment file and defined in environ, replace with environment value
+        for i, env in enumerate(deployment_yaml["spec"]["predictors"][0]["componentSpecs"][0]["spec"]["containers"][0]["env"]):
+            if env["name"] in os.environ and env["value"] == "":
+                deployment_yaml["spec"]["predictors"][0]["componentSpecs"][0]["spec"]["containers"][0]["env"][i] = os.environ[env["name"]]
+
         try:
             mlflow_client.transition_model_version_stage(model_name, latest_version, stage="Production", archive_existing_versions=True)
 
