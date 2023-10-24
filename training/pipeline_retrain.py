@@ -38,7 +38,9 @@ def deploy_best_model(model_name):
     latest_version = max(model_versions_metadata, key=lambda x: int(x.version)).version
     latest_accuracy = mlflow_client.get_metric_history(latest_run_id, key="accuracy")[0].value
 
+    #is_new_model_better =  latest_accuracy > production_accuracy
     is_new_model_better =  True
+
     if is_new_model_better:
 
         print("deploying retrained model")
@@ -50,9 +52,9 @@ def deploy_best_model(model_name):
             deployment_yaml = yaml.safe_load(stream)
         for k,v in os.environ.items():
             deployment_yaml["spec"]["predictors"][0]["componentSpecs"][0]["spec"]["containers"][0]["env"].append({k:v})
-
+            print(deployment_yaml)
         try:
-            mlflow_client.transition_model_version_stage(model_name, latest_version, stage="Production")
+            mlflow_client.transition_model_version_stage(model_name, latest_version, stage="Production", archive_existing_versions=True)
 
             custom_api.create_namespaced_custom_object(
                 group="machinelearning.seldon.io",
