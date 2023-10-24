@@ -56,40 +56,40 @@ def deploy_best_model(model_name):
             if env["name"] in os.environ and env["value"] == "":
                 deployment_yaml["spec"]["predictors"][0]["componentSpecs"][0]["spec"]["containers"][0]["env"][i] = os.environ[env["name"]]
 
-        try:
-            mlflow_client.transition_model_version_stage(model_name, latest_version, stage="Production", archive_existing_versions=True)
+        # try:
+        custom_api.create_namespaced_custom_object(
+            group="machinelearning.seldon.io",
+            version="v1alpha2",
+            namespace="mlops-seldon",
+            plural="seldondeployments",
+            body=deployment_yaml
+        )
+        # except:
+        #     existing_deployment_yaml = custom_api.get_namespaced_custom_object(
+        #         group="machinelearning.seldon.io",
+        #         version="v1alpha2",
+        #         namespace="mlops-seldon",
+        #         plural="seldondeployments",
+        #         name=deployment_yaml["metadata"]["name"],
+        #     )
 
-            custom_api.create_namespaced_custom_object(
-                group="machinelearning.seldon.io",
-                version="v1alpha2",
-                namespace="mlops-seldon",
-                plural="seldondeployments",
-                body=deployment_yaml
-            )
-        except:
-            existing_deployment_yaml = custom_api.get_namespaced_custom_object(
-                group="machinelearning.seldon.io",
-                version="v1alpha2",
-                namespace="mlops-seldon",
-                plural="seldondeployments",
-                name=deployment_yaml["metadata"]["name"],
-            )
+        #     custom_api.delete_namespaced_custom_object(
+        #         group="machinelearning.seldon.io",
+        #         version="v1alpha2",
+        #         namespace="mlops-seldon",
+        #         plural="seldondeployments",
+        #         name=existing_deployment_yaml["metadata"]["name"],
+        #     )
 
-            custom_api.delete_namespaced_custom_object(
-                group="machinelearning.seldon.io",
-                version="v1alpha2",
-                namespace="mlops-seldon",
-                plural="seldondeployments",
-                name=existing_deployment_yaml["metadata"]["name"],
-            )
+        #     custom_api.create_namespaced_custom_object(
+        #         group="machinelearning.seldon.io",
+        #         version="v1alpha2",
+        #         namespace="mlops-seldon",
+        #         plural="seldondeployments",
+        #         body=deployment_yaml
+        #     )
 
-            custom_api.create_namespaced_custom_object(
-                group="machinelearning.seldon.io",
-                version="v1alpha2",
-                namespace="mlops-seldon",
-                plural="seldondeployments",
-                body=deployment_yaml
-            )
+        mlflow_client.transition_model_version_stage(model_name, latest_version, stage="Production", archive_existing_versions=True)
 
 @task
 def retrain_model(new_data: pd.DataFrame, model_name: str, test_size: float, n_jobs: int=2):
