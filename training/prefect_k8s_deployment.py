@@ -41,7 +41,7 @@ customizations = [
 
 infra_k8s = KubernetesJob(
     env=environment,
-    image="ghcr.io/khaosresearch/prefect-landcover:latest",
+    image="ghcr.io/khaosresearch/prefect-creditcard:latest",
     namespace="mlops-prefect",
     image_pull_policy="Always",
     cluster_config=cluster_config_block,
