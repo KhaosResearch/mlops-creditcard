@@ -52,9 +52,9 @@ def deploy_best_model(model_name):
             deployment_yaml = yaml.safe_load(stream)
 
         # If value is empty in deployment file and defined in environ, replace with environment value
-        # for i, env in enumerate(deployment_yaml["spec"]["predictors"][0]["componentSpecs"][0]["spec"]["containers"][0]["env"]):
-        #     if env["name"] in os.environ and env["value"] == "":
-        #         deployment_yaml["spec"]["predictors"][0]["componentSpecs"][0]["spec"]["containers"][0]["env"][i] = os.environ[env["name"]]
+        for i, env in enumerate(deployment_yaml["spec"]["predictors"][0]["componentSpecs"][0]["spec"]["containers"][0]["env"]):
+            if env["name"] in os.environ and env["value"] == "":
+                deployment_yaml["spec"]["predictors"][0]["componentSpecs"][0]["spec"]["containers"][0]["env"][i] = os.environ[env["name"]]
 
         # try:
         custom_api.create_namespaced_custom_object(
