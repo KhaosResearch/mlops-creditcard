@@ -43,8 +43,6 @@ def deploy_best_model(model_name):
 
     if is_new_model_better:
 
-        print("deploying retrained model")
-
         cluster_config_block = KubernetesClusterConfig.load("k8s-config")
         config.load_kube_config_from_dict(cluster_config_block.config)
         custom_api = client.CustomObjectsApi()
@@ -53,8 +51,8 @@ def deploy_best_model(model_name):
 
         # If value is empty in deployment file and defined in environ, replace with environment value
         for i, env in enumerate(deployment_yaml["spec"]["predictors"][0]["componentSpecs"][0]["spec"]["containers"][0]["env"]):
-            if env["name"] in os.environ and env["value"] == "":
-                deployment_yaml["spec"]["predictors"][0]["componentSpecs"][0]["spec"]["containers"][0]["env"][i] = os.environ[env["name"]]
+            if env["name"] in os.environ:
+                deployment_yaml["spec"]["predictors"][0]["componentSpecs"][0]["spec"]["containers"][0]["env"][i]["value"] = os.environ[env["name"]]
 
         # try:
         custom_api.create_namespaced_custom_object(
