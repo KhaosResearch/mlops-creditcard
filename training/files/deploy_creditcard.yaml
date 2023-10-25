@@ -49,9 +49,6 @@ spec:
       - name: model_name
         type: STRING
         value: creditcard
-      - name: file_path
-        type: STRING
-        value: files
       - name: model_version
         type: STRING
         value: production
