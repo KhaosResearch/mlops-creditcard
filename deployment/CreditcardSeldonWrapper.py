@@ -2,6 +2,7 @@ import json
 import os
 
 import mlflow
+import numpy as np
 import pandas as pd
 from confluent_kafka import Producer
 from confluent_kafka.error import ProduceError
@@ -46,7 +47,7 @@ class CreditcardSeldonWrapper:
         predicted_label = self.predictor.prediction_to_label(int(prediction))
 
         try:
-            value = json.dumps({"X":X,"Y":prediction})
+            value = json.dumps({"X":X.tolist(),"Y":list(prediction.tolist())})
             self.producer.produce(self.model_name, value=value)
         except ProduceError as e:
             print(f"Error producing {value} to kafka, it was not sent. Error trace:\n", e)
