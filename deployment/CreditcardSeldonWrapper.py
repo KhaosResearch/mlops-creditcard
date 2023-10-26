@@ -47,7 +47,7 @@ class CreditcardSeldonWrapper:
 
         try:
             value = json.dumps({"X":X,"Y":prediction})
-            self.producer.produce('creditcard', key='key', value=value)
+            self.producer.produce(self.model_name, key='key', value=value)
         except ProduceError as e:
             print(f"Error producing {value} to kafka, it was not sent. Error trace:\n", e)
             pass
