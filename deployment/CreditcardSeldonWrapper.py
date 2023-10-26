@@ -38,16 +38,11 @@ class CreditcardSeldonWrapper:
         if not self.ready:
             self.load_model()
             self.connect_to_kafka()
-        
-        if features_names is not None:
-            data = pd.DataFrame(X, columns=features_names)
-        else:
-            data = X
-        prediction = self.predictor.predict(data)
+        prediction = self.predictor.predict(X)
         predicted_label = self.predictor.prediction_to_label(int(prediction))
 
         try:
-            value = json.dumps({"X":X.tolist(),"Y":list(prediction.tolist())})
+            value = json.dumps({"X":X.tolist(),"Y":prediction.tolist()})
             self.producer.produce(self.model_name, value=value)
         except ProduceError as e:
             print(f"Error producing {value} to kafka, it was not sent. Error trace:\n", e)
